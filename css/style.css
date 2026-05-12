@@ -4,7 +4,7 @@
    ════════════════════════════════════════ */
 
 /* ── SF PRO FONT STACK ── */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@700;800;900&display=swap');
+/* Font Inter sudah di-load via <link> di HTML head untuk performa optimal */
 
 :root {
   /* Colors */
@@ -27,8 +27,8 @@
   --glass-shine:   rgba(255,255,255,0.08);
   --glass-shadow:  0 8px 32px rgba(0,0,0,0.45), 0 1.5px 0 rgba(255,255,255,0.07) inset;
 
-  /* Typography — SF Pro Display fallback */
-  --font-sf: -apple-system, "SF Pro Display", "SF Pro Text", "Helvetica Neue", ui-sans-serif, system-ui;
+  /* Typography — Inter sebagai font utama (SF Pro Display tidak tersedia di Google Fonts) */
+  --font-sf: "Inter", -apple-system, "Helvetica Neue", ui-sans-serif, system-ui;
   --font-mono: "SF Mono", ui-monospace, "Cascadia Code", monospace;
 }
 
@@ -100,6 +100,7 @@ body {
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
 }
 .orb1 {
   width: 500px; height: 500px;
@@ -1378,6 +1379,10 @@ footer a:hover { color: var(--accent3); }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
+  /* Nonaktifkan orb yang berat di mobile */
+  .orb3, .orb4 { display: none; }
+  .orb1 { width: 300px; height: 300px; filter: blur(60px); }
+  .orb2 { width: 250px; height: 250px; filter: blur(60px); }
   .source-inner { grid-template-columns: 1fr; gap: 2.5rem; }
   .dev-card { grid-template-columns: 1fr; }
   .dev-left { min-height: 280px; }
@@ -2137,9 +2142,9 @@ footer a:hover { color: var(--accent3); }
   transform: translateY(-1px);
 }
 .sort-btn.active {
-  background: rgba(108,99,255,0.18);
-  border-color: rgba(108,99,255,0.4);
-  color: var(--accent);
+  background: rgba(108,99,255,0.25);
+  border-color: rgba(108,99,255,0.5);
+  color: #b8b3ff; /* lebih terang dari --accent (#6c63ff) untuk kontras cukup */
   box-shadow: 0 0 10px rgba(108,99,255,0.15);
 }
 
@@ -2694,5 +2699,24 @@ textarea { box-sizing: border-box; }
     word-break: break-word;
     white-space: normal;
     overflow-wrap: break-word;
+  }
+}
+
+/* ── PERFORMA: pause animasi non-esensial di mobile ── */
+@media (max-width: 768px) {
+  .orb1, .orb2 {
+    animation-play-state: paused;
+  }
+  .marquee-track {
+    animation-duration: 40s; /* lebih lambat = lebih hemat */
+  }
+}
+
+/* ── AKSESIBILITAS: hormat preferensi reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

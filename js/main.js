@@ -33,6 +33,11 @@
      2. CANVAS PARTICLES
      ────────────────────────────────────── */
   const canvas = document.getElementById('particles');
+  // Nonaktifkan particles di mobile untuk hemat CPU (main thread)
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    if (canvas) canvas.style.display = 'none';
+  } else {
   const ctx    = canvas.getContext('2d');
   let W, H;
   let particles = [];
@@ -134,6 +139,7 @@
     requestAnimationFrame(drawFrame);
   }
   drawFrame();
+  } // end: if (!isMobile)
 
   /* ──────────────────────────────────────
      3. NAV SCROLL EFFECT
@@ -353,15 +359,10 @@
   });
 
   /* ──────────────────────────────────────
-     13. PAGE LOAD FADE-IN
+     13. PAGE LOAD — sudah visible by default
+         (body opacity diatur di CSS, bukan JS,
+          agar tidak menyebabkan LCP terlambat)
      ────────────────────────────────────── */
-  document.body.style.opacity = '0';
-  document.body.style.transition = 'opacity 0.5s ease';
-  window.addEventListener('DOMContentLoaded', () => {});
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      document.body.style.opacity = '1';
-    });
-  });
+  // Tidak perlu set opacity 0 di JS — sudah ditangani CSS
 
 })();
