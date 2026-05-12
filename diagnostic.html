@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniZone — Firebase Diagnostic</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Courier New', monospace;
+    background: #0a0a12;
+    color: #e0e0ff;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #a78bfa;
+    margin-bottom: 0.3rem;
+    letter-spacing: 1px;
+  }
+  .subtitle { font-size: 0.78rem; color: #666; margin-bottom: 2rem; }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 1.4rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 1rem;
+  }
+
+  .test-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem;
+  }
+  .test-row:last-child { border-bottom: none; }
+
+  .status-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: #333;
+    transition: background 0.3s;
+  }
+  .status-dot.pending { background: #555; animation: blink 1s infinite; }
+  .status-dot.ok      { background: #4ade80; box-shadow: 0 0 8px #4ade8066; }
+  .status-dot.error   { background: #ff6b6b; box-shadow: 0 0 8px #ff6b6b66; }
+  .status-dot.warn    { background: #ffd700; box-shadow: 0 0 8px #ffd70066; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .test-name { flex: 1; color: #c0c0e0; }
+  .test-result { font-size: 0.75rem; color: #888; max-width: 300px; text-align: right; word-break: break-all; }
+  .test-result.ok    { color: #4ade80; }
+  .test-result.error { color: #ff6b6b; }
+  .test-result.warn  { color: #ffd700; }
+
+  .rules-box {
+    background: #0d0d1a;
+    border: 1px solid rgba(108,99,255,0.3);
+    border-radius: 10px;
+    padding: 1.2rem;
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: #a0a0c0;
+    white-space: pre;
+    overflow-x: auto;
+    margin-top: 0.8rem;
+  }
+  .kw  { color: #c084fc; }
+  .str { color: #86efac; }
+  .cm  { color: #555; }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #6c63ff, #5a52e8);
+    color: #fff;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(108,99,255,0.35); }
+  .btn:active { transform: scale(0.97); }
+  .btn-sm {
+    padding: 6px 14px;
+    font-size: 0.72rem;
+    background: rgba(108,99,255,0.15);
+    border: 1px solid rgba(108,99,255,0.3);
+    color: #a78bfa;
+  }
+  .btn-sm:hover { background: rgba(108,99,255,0.25); box-shadow: none; }
+
+  .console-log {
+    background: #050508;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 10px;
+    padding: 1rem;
+    font-size: 0.76rem;
+    line-height: 1.8;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-top: 0.8rem;
+    color: #888;
+  }
+  .log-ok   { color: #4ade80; }
+  .log-err  { color: #ff6b6b; }
+  .log-info { color: #60a5fa; }
+  .log-warn { color: #ffd700; }
+
+  .summary {
+    margin-top: 1.5rem;
+    padding: 1.2rem 1.4rem;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    display: none;
+  }
+  .summary.rules-problem {
+    display: block;
+    background: rgba(255,107,107,0.07);
+    border: 1px solid rgba(255,107,107,0.25);
+    color: #ffbfbf;
+  }
+  .summary.all-ok {
+    display: block;
+    background: rgba(74,222,128,0.07);
+    border: 1px solid rgba(74,222,128,0.25);
+    color: #bbf7d0;
+  }
+  .summary-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .divider {
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+    margin: 1.5rem 0;
+  }
+
+  .tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 1rem;
+  }
+  .tab {
+    padding: 6px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: transparent;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .tab.active {
+    background: rgba(108,99,255,0.18);
+    border-color: rgba(108,99,255,0.4);
+    color: #a78bfa;
+  }
+</style>
+</head>
+<body>
+
+<h1>🔬 AniZone Firebase Diagnostic</h1>
+<p class="subtitle">Cek apakah masalah ada di kode JS atau di Firebase Security Rules</p>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="showTab('diagnostic')">Diagnostic</button>
+  <button class="tab" onclick="showTab('rules')">Fix Rules</button>
+  <button class="tab" onclick="showTab('manual')">Manual Test</button>
+</div>
+
+<!-- TAB: DIAGNOSTIC -->
+<div id="tab-diagnostic">
+  <div class="card">
+    <div class="card-title">Status Test</div>
+
+    <div class="test-row" id="row-init">
+      <div class="status-dot" id="dot-init"></div>
+      <div class="test-name">Firebase Init</div>
+      <div class="test-result" id="res-init">belum dijalankan</div>
+    </div>
+    <div class="test-row" id="row-read">
+      <div class="status-dot" id="dot-read"></div>
+      <div class="test-name">Read komentar (allow read)</div>
+      <div class="test-result" id="res-read">belum dijalankan</div>
+    </div>
+    <div class="test-row" id="row-write">
+      <div class="status-dot" id="dot-write"></div>
+      <div class="test-name">Write komentar baru (allow create)</div>
+      <div class="test-result" id="res-write">belum dijalankan</div>
+    </div>
+    <div class="test-row" id="row-update">
+      <div class="status-dot" id="dot-update"></div>
+      <div class="test-name">Update likes (allow update) ← kemungkinan root masalah</div>
+      <div class="test-result" id="res-update">belum dijalankan</div>
+    </div>
+    <div class="test-row" id="row-delete">
+      <div class="status-dot" id="dot-delete"></div>
+      <div class="test-name">Delete komentar sendiri (allow delete)</div>
+      <div class="test-result" id="res-delete">belum dijalankan</div>
+    </div>
+    <div class="test-row" id="row-merge">
+      <div class="status-dot" id="dot-merge"></div>
+      <div class="test-name">setDoc merge (fallback likes) ← kemungkinan root masalah</div>
+      <div class="test-result" id="res-merge">belum dijalankan</div>
+    </div>
+
+    <div style="margin-top:1.2rem;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="runDiagnostic()">▶ Jalankan Semua Test</button>
+      <button class="btn btn-sm" onclick="clearLog()">🗑 Clear Log</button>
+    </div>
+  </div>
+
+  <div class="console-log" id="consoleLog">
+    <span class="log-info">// Log akan muncul di sini saat test dijalankan...</span>
+  </div>
+
+  <div class="summary rules-problem" id="summaryRulesProblem">
+    <div class="summary-title">🚨 Masalah: Firebase Security Rules terlalu ketat</div>
+    <div>Test <strong>update</strong> atau <strong>delete</strong> gagal dengan error PERMISSION_DENIED.<br>
+    Ini bukan bug di kode JS — ini Rules Firestore yang belum mengizinkan operasi tersebut.<br><br>
+    👉 Klik tab <strong>"Fix Rules"</strong> untuk lihat rules yang perlu dipasang.</div>
+  </div>
+
+  <div class="summary all-ok" id="summaryAllOk">
+    <div class="summary-title">✅ Semua permission OK</div>
+    <div>Firebase mengizinkan semua operasi. Jika like/edit masih tidak bisa, kemungkinan ada bug lain di kode — cek tab Manual Test untuk debug lebih lanjut.</div>
+  </div>
+</div>
+
+<!-- TAB: RULES -->
+<div id="tab-rules" style="display:none">
+  <div class="card">
+    <div class="card-title">Cara Fix di Firebase Console</div>
+    <div style="font-size:0.83rem;line-height:1.9;color:#b0b0d0">
+      <strong style="color:#a78bfa">1.</strong> Buka <a href="https://console.firebase.google.com" target="_blank" style="color:#60a5fa">console.firebase.google.com</a><br>
+      <strong style="color:#a78bfa">2.</strong> Pilih project: <strong style="color:#e0e0ff">promo-anizone</strong><br>
+      <strong style="color:#a78bfa">3.</strong> Sidebar kiri → <strong>Firestore Database</strong><br>
+      <strong style="color:#a78bfa">4.</strong> Tab <strong>Rules</strong> di bagian atas<br>
+      <strong style="color:#a78bfa">5.</strong> Hapus semua teks yang ada<br>
+      <strong style="color:#a78bfa">6.</strong> Copy-paste rules di bawah ini<br>
+      <strong style="color:#a78bfa">7.</strong> Klik tombol <strong>Publish</strong>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:0.72rem;color:#666;letter-spacing:1px">FIRESTORE SECURITY RULES</span>
+      <button class="btn btn-sm" onclick="copyRules()">📋 Copy Rules</button>
+    </div>
+    <div class="rules-box" id="rulesCode"><span class="kw">rules_version</span> = <span class="str">'2'</span>;
+<span class="cm">// AniZone 2026 — Security Rules</span>
+<span class="kw">service</span> cloud.firestore {
+  <span class="kw">match</span> /databases/{database}/documents {
+
+    <span class="cm">// ── Komentar ──────────────────────────</span>
+    <span class="kw">match</span> /comments/{commentId} {
+      <span class="cm">// Siapa saja bisa baca komentar</span>
+      <span class="kw">allow</span> read: <span class="kw">if</span> true;
+
+      <span class="cm">// Buat komentar baru: validasi panjang</span>
+      <span class="kw">allow</span> create: <span class="kw">if</span> request.resource.data.text.size() &lt;= 500
+                     &amp;&amp; request.resource.data.username.size() &gt;= 3
+                     &amp;&amp; request.resource.data.username.size() &lt;= 30;
+
+      <span class="cm">// Update: izinkan edit teks DAN update likes</span>
+      <span class="kw">allow</span> update: <span class="kw">if</span> true;
+
+      <span class="cm">// Delete: izinkan (user hanya bisa hapus komentarnya sendiri</span>
+      <span class="cm">// — validasi di sisi klien sudah cukup untuk use-case ini)</span>
+      <span class="kw">allow</span> delete: <span class="kw">if</span> true;
+    }
+
+    <span class="cm">// ── Profil User ────────────────────────</span>
+    <span class="kw">match</span> /users/{userId} {
+      <span class="kw">allow</span> read:   <span class="kw">if</span> true;
+      <span class="kw">allow</span> write:  <span class="kw">if</span> true;
+    }
+  }
+}</div>
+
+    <div style="margin-top:1rem;padding:1rem;background:rgba(255,215,0,0.05);border:1px solid rgba(255,215,0,0.2);border-radius:10px;font-size:0.78rem;color:#ffd700cc;line-height:1.7">
+      ⚠️ <strong style="color:#ffd700">Catatan keamanan:</strong> Rules ini mengizinkan semua update/delete tanpa autentikasi, cocok untuk project edukasi/portofolio. Untuk production serius, tambahkan Firebase Auth.
+    </div>
+  </div>
+</div>
+
+<!-- TAB: MANUAL TEST -->
+<div id="tab-manual" style="display:none">
+  <div class="card">
+    <div class="card-title">Test Manual Per Operasi</div>
+    <div style="font-size:0.82rem;color:#888;margin-bottom:1rem">
+      Jalankan operasi satu per satu untuk isolasi masalah.
+      ID dokumen test akan dibuat otomatis.
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <button class="btn btn-sm" onclick="testRead()">📖 Test Read</button>
+      <button class="btn btn-sm" onclick="testCreate()">✏️ Test Create</button>
+      <button class="btn btn-sm" onclick="testUpdate()">🔄 Test Update</button>
+      <button class="btn btn-sm" onclick="testDelete()">🗑 Test Delete</button>
+      <button class="btn btn-sm" onclick="testLike()">❤️ Test Like (increment)</button>
+      <button class="btn btn-sm" onclick="testSetDocMerge()">🔀 Test setDoc merge</button>
+    </div>
+  </div>
+  <div class="console-log" id="manualLog">
+    <span class="log-info">// Klik tombol di atas untuk test manual...</span>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import {
+    getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc,
+    doc, setDoc, increment, serverTimestamp, limit, query
+  } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyCXjocVdoNJugil1nlAzjT-qune4jG4dVs",
+    authDomain:        "promo-anizone.firebaseapp.com",
+    projectId:         "promo-anizone",
+    storageBucket:     "promo-anizone.firebasestorage.app",
+    messagingSenderId: "1081750606604",
+    appId:             "1:1081750606604:web:e740c5007361ecf2dcef29"
+  };
+
+  let app, db;
+  let testDocId = null;
+
+  // ── Tab switching ──────────────────────────────────────
+  window.showTab = function(name) {
+    ['diagnostic','rules','manual'].forEach(t => {
+      document.getElementById('tab-' + t).style.display = t === name ? 'block' : 'none';
+    });
+    document.querySelectorAll('.tab').forEach((btn, i) => {
+      btn.classList.toggle('active', ['diagnostic','rules','manual'][i] === name);
+    });
+  };
+
+  // ── Logging ────────────────────────────────────────────
+  function log(msg, type = 'info', target = 'consoleLog') {
+    const el = document.getElementById(target);
+    const line = document.createElement('div');
+    line.className = `log-${type}`;
+    const ts = new Date().toLocaleTimeString('id-ID');
+    line.textContent = `[${ts}] ${msg}`;
+    el.appendChild(line);
+    el.scrollTop = el.scrollHeight;
+  }
+
+  function setStatus(key, status, msg) {
+    const dot = document.getElementById('dot-' + key);
+    const res = document.getElementById('res-' + key);
+    if (dot) { dot.className = 'status-dot ' + status; }
+    if (res) { res.className = 'test-result ' + status; res.textContent = msg; }
+  }
+
+  window.clearLog = function() {
+    document.getElementById('consoleLog').innerHTML = '';
+  };
+
+  // ── Copy rules ─────────────────────────────────────────
+  window.copyRules = function() {
+    const raw = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if request.resource.data.text.size() <= 500
+                     && request.resource.data.username.size() >= 3
+                     && request.resource.data.username.size() <= 30;
+      allow update: if true;
+      allow delete: if true;
+    }
+    match /users/{userId} {
+      allow read:  if true;
+      allow write: if true;
+    }
+  }
+}`;
+    navigator.clipboard.writeText(raw).then(() => {
+      const btn = event.target;
+      btn.textContent = '✅ Tersalin!';
+      setTimeout(() => btn.textContent = '📋 Copy Rules', 2000);
+    });
+  };
+
+  // ── Init ───────────────────────────────────────────────
+  function initFirebase() {
+    try {
+      app = initializeApp(firebaseConfig);
+      db  = getFirestore(app);
+      setStatus('init', 'ok', '✓ berhasil');
+      log('Firebase init OK — project: promo-anizone', 'ok');
+      return true;
+    } catch(e) {
+      setStatus('init', 'error', e.code || e.message);
+      log('Firebase init GAGAL: ' + e.message, 'err');
+      return false;
+    }
+  }
+
+  // ── Full diagnostic ────────────────────────────────────
+  window.runDiagnostic = async function() {
+    document.getElementById('summaryRulesProblem').style.display = 'none';
+    document.getElementById('summaryAllOk').style.display = 'none';
+
+    ['init','read','write','update','delete','merge'].forEach(k => {
+      setStatus(k, 'pending', '...');
+    });
+    log('═══ Memulai diagnostic ═══', 'info');
+
+    if (!initFirebase()) return;
+
+    let allOk = true;
+    let rulesError = false;
+
+    // 1. READ
+    log('Test 1: Read komentar...', 'info');
+    setStatus('read', 'pending', 'testing...');
+    try {
+      const q = query(collection(db, 'comments'), limit(1));
+      const snap = await getDocs(q);
+      setStatus('read', 'ok', `✓ OK (${snap.size} doc ditemukan)`);
+      log('  ✓ Read OK', 'ok');
+    } catch(e) {
+      setStatus('read', 'error', e.code || 'GAGAL');
+      log('  ✗ Read GAGAL: ' + e.message, 'err');
+      allOk = false;
+      if (e.code === 'permission-denied') rulesError = true;
+    }
+
+    // 2. WRITE (create test doc)
+    log('Test 2: Write komentar baru...', 'info');
+    setStatus('write', 'pending', 'testing...');
+    try {
+      const ref = await addDoc(collection(db, 'comments'), {
+        username: '_diagnostic_test_',
+        text: 'TEST DIAGNOSTIC - bisa dihapus',
+        likes: 0,
+        createdAt: serverTimestamp()
+      });
+      testDocId = ref.id;
+      setStatus('write', 'ok', `✓ OK (id: ${ref.id.slice(0,8)}...)`);
+      log('  ✓ Write OK — doc id: ' + ref.id, 'ok');
+    } catch(e) {
+      setStatus('write', 'error', e.code || 'GAGAL');
+      log('  ✗ Write GAGAL: ' + e.message, 'err');
+      allOk = false;
+      if (e.code === 'permission-denied') rulesError = true;
+    }
+
+    // 3. UPDATE (butuh doc yang baru dibuat)
+    log('Test 3: Update (likes increment)...', 'info');
+    setStatus('update', 'pending', 'testing...');
+    if (testDocId) {
+      try {
+        await updateDoc(doc(db, 'comments', testDocId), { likes: increment(1) });
+        setStatus('update', 'ok', '✓ OK');
+        log('  ✓ updateDoc OK — likes increment berhasil', 'ok');
+      } catch(e) {
+        setStatus('update', 'error', e.code || 'GAGAL');
+        log('  ✗ updateDoc GAGAL: ' + e.message, 'err');
+        log('  → INI PENYEBAB LIKE TIDAK BISA! Rules tidak izinkan update.', 'warn');
+        allOk = false;
+        if (e.code === 'permission-denied') rulesError = true;
+      }
+    } else {
+      setStatus('update', 'warn', 'skip (no doc)');
+      log('  ⚠ Skip update — doc test tidak ada', 'warn');
+    }
+
+    // 4. DELETE
+    log('Test 4: Delete...', 'info');
+    setStatus('delete', 'pending', 'testing...');
+    if (testDocId) {
+      try {
+        await deleteDoc(doc(db, 'comments', testDocId));
+        setStatus('delete', 'ok', '✓ OK (doc test dihapus)');
+        log('  ✓ deleteDoc OK — doc test berhasil dihapus', 'ok');
+        testDocId = null;
+      } catch(e) {
+        setStatus('delete', 'error', e.code || 'GAGAL');
+        log('  ✗ deleteDoc GAGAL: ' + e.message, 'err');
+        allOk = false;
+        if (e.code === 'permission-denied') rulesError = true;
+      }
+    } else {
+      setStatus('delete', 'warn', 'skip (no doc)');
+    }
+
+    // 5. setDoc merge (fallback likes)
+    log('Test 5: setDoc merge (fallback likes)...', 'info');
+    setStatus('merge', 'pending', 'testing...');
+    try {
+      const tmpRef = doc(db, 'comments', '__merge_test_' + Date.now());
+      await setDoc(tmpRef, { likes: 1 }, { merge: true });
+      await deleteDoc(tmpRef);
+      setStatus('merge', 'ok', '✓ OK');
+      log('  ✓ setDoc merge OK', 'ok');
+    } catch(e) {
+      setStatus('merge', 'error', e.code || 'GAGAL');
+      log('  ✗ setDoc merge GAGAL: ' + e.message, 'err');
+      log('  → INI PENYEBAB LIKE MASIH GAGAL meski ada fallback!', 'warn');
+      allOk = false;
+      if (e.code === 'permission-denied') rulesError = true;
+    }
+
+    // Summary
+    log('', 'info');
+    if (rulesError) {
+      log('═══ KESIMPULAN: PERMISSION DENIED dari Firebase Rules ═══', 'err');
+      log('→ Buka tab "Fix Rules" dan pasang rules yang benar', 'warn');
+      document.getElementById('summaryRulesProblem').style.display = 'block';
+    } else if (!allOk) {
+      log('═══ KESIMPULAN: Ada error, tapi bukan Rules ═══', 'warn');
+      log('→ Kemungkinan koneksi internet atau config Firebase salah', 'warn');
+    } else {
+      log('═══ KESIMPULAN: Semua test LULUS ✓ ═══', 'ok');
+      document.getElementById('summaryAllOk').style.display = 'block';
+    }
+  };
+
+  // ── Manual tests ───────────────────────────────────────
+  function mlog(msg, type='info') { log(msg, type, 'manualLog'); }
+
+  window.testRead = async function() {
+    if (!db && !initFirebase()) return;
+    mlog('Read test...', 'info');
+    try {
+      const snap = await getDocs(query(collection(db, 'comments'), limit(3)));
+      mlog(`✓ Read OK — ${snap.size} dokumen`, 'ok');
+      snap.forEach(d => mlog(`  └ id:${d.id.slice(0,8)} user:${d.data().username}`, 'info'));
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  window.testCreate = async function() {
+    if (!db && !initFirebase()) return;
+    mlog('Create test...', 'info');
+    try {
+      const ref = await addDoc(collection(db, 'comments'), {
+        username: '_manual_test_',
+        text: 'manual test doc',
+        likes: 0,
+        createdAt: serverTimestamp()
+      });
+      testDocId = ref.id;
+      mlog('✓ Create OK — id: ' + ref.id, 'ok');
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  window.testUpdate = async function() {
+    if (!db && !initFirebase()) return;
+    if (!testDocId) { mlog('⚠ Jalankan Create dulu untuk buat doc test', 'warn'); return; }
+    mlog('Update test (doc: ' + testDocId.slice(0,8) + ')...', 'info');
+    try {
+      await updateDoc(doc(db, 'comments', testDocId), { text: 'updated ' + Date.now() });
+      mlog('✓ Update OK', 'ok');
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  window.testDelete = async function() {
+    if (!db && !initFirebase()) return;
+    if (!testDocId) { mlog('⚠ Jalankan Create dulu untuk buat doc test', 'warn'); return; }
+    mlog('Delete test (doc: ' + testDocId.slice(0,8) + ')...', 'info');
+    try {
+      await deleteDoc(doc(db, 'comments', testDocId));
+      mlog('✓ Delete OK', 'ok');
+      testDocId = null;
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  window.testLike = async function() {
+    if (!db && !initFirebase()) return;
+    if (!testDocId) { mlog('⚠ Jalankan Create dulu untuk buat doc test', 'warn'); return; }
+    mlog('Like (increment) test...', 'info');
+    try {
+      await updateDoc(doc(db, 'comments', testDocId), { likes: increment(1) });
+      mlog('✓ increment(1) OK', 'ok');
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  window.testSetDocMerge = async function() {
+    if (!db && !initFirebase()) return;
+    mlog('setDoc merge test...', 'info');
+    try {
+      const tmpId = '__merge_' + Date.now();
+      await setDoc(doc(db, 'comments', tmpId), { likes: 99 }, { merge: true });
+      await deleteDoc(doc(db, 'comments', tmpId));
+      mlog('✓ setDoc merge OK', 'ok');
+    } catch(e) { mlog('✗ ' + e.code + ': ' + e.message, 'err'); }
+  };
+
+  // Auto-init on load
+  if (!db) initFirebase();
+</script>
+</body>
+</html>
