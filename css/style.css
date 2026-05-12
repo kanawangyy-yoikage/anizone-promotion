@@ -36,6 +36,33 @@
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 html { scroll-behavior: smooth; }
 
+/* ── CUSTOM SCROLLBAR ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #08080f;
+  border-left: 1px solid rgba(108,99,255,0.08);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #6c63ff 0%, #a78bfa 50%, #00e5ff 100%);
+  border-radius: 100px;
+  box-shadow: 0 0 8px rgba(108,99,255,0.5);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #8b84ff 0%, #c4b5fd 50%, #38efff 100%);
+  box-shadow: 0 0 14px rgba(108,99,255,0.7);
+}
+::-webkit-scrollbar-corner {
+  background: #08080f;
+}
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #6c63ff #08080f;
+}
+
 body {
   font-family: var(--font-sf);
   font-weight: 700;
@@ -73,37 +100,66 @@ body {
   filter: blur(80px);
   pointer-events: none;
   z-index: 0;
-  animation: orbFloat 12s ease-in-out infinite;
 }
 .orb1 {
   width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(108,99,255,0.22) 0%, transparent 70%);
   top: -10%; left: -10%;
-  animation-delay: 0s;
+  animation: orbFloat1 14s ease-in-out infinite;
 }
 .orb2 {
   width: 400px; height: 400px;
-  background: radial-gradient(circle, rgba(0,229,255,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0,229,255,0.16) 0%, transparent 70%);
   top: 30%; right: -8%;
-  animation-delay: -4s;
+  animation: orbFloat2 18s ease-in-out infinite;
+  animation-delay: -5s;
 }
 .orb3 {
   width: 350px; height: 350px;
-  background: radial-gradient(circle, rgba(255,107,107,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,107,107,0.14) 0%, transparent 70%);
   bottom: 10%; left: 20%;
-  animation-delay: -8s;
+  animation: orbFloat3 16s ease-in-out infinite;
+  animation-delay: -9s;
 }
 .orb4 {
   width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(255,215,0,0.07) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
   bottom: 30%; right: 15%;
-  animation-delay: -2s;
+  animation: orbFloat4 20s ease-in-out infinite;
+  animation-delay: -3s;
 }
 
-@keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%  { transform: translate(30px, -20px) scale(1.04); }
-  66%  { transform: translate(-20px, 15px) scale(0.97); }
+@keyframes orbFloat1 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  20%  { transform: translate(60px, 40px) scale(1.08); }
+  40%  { transform: translate(30px, -50px) scale(0.95); }
+  60%  { transform: translate(-40px, 30px) scale(1.05); }
+  80%  { transform: translate(50px, 60px) scale(0.98); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes orbFloat2 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  25%  { transform: translate(-70px, 50px) scale(1.1); }
+  50%  { transform: translate(-30px, -60px) scale(0.92); }
+  75%  { transform: translate(60px, -20px) scale(1.06); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes orbFloat3 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  30%  { transform: translate(80px, -40px) scale(1.07); }
+  60%  { transform: translate(-50px, -30px) scale(0.93); }
+  80%  { transform: translate(20px, 70px) scale(1.04); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes orbFloat4 {
+  0%   { transform: translate(0px, 0px) scale(1); }
+  15%  { transform: translate(-60px, 30px) scale(1.09); }
+  45%  { transform: translate(40px, 70px) scale(0.94); }
+  70%  { transform: translate(70px, -50px) scale(1.06); }
+  100% { transform: translate(0px, 0px) scale(1); }
 }
 
 /* ── SCANLINES ── */
@@ -303,7 +359,7 @@ nav.scrolled {
   position: relative;
   min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   overflow: hidden;
   padding-top: 64px;
   z-index: 2;
@@ -355,7 +411,7 @@ nav.scrolled {
   z-index: 2;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 5rem 2rem 4rem;
   width: 100%;
 }
 
@@ -2493,8 +2549,8 @@ footer a:hover { color: var(--accent3); }
 
   /* Hero */
   .hero-content {
-    padding: 0 1.2rem;
-    padding-top: 80px;
+    padding: 2rem 1.2rem 2rem;
+    padding-top: 2rem;
   }
   .hero-title { font-size: clamp(2rem, 10vw, 3rem); }
   .hero-sub { font-size: 0.85rem; }
