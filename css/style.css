@@ -2446,3 +2446,179 @@ footer a:hover { color: var(--accent3); }
   .sort-bar { gap: 6px; }
   .sort-btn { padding: 4px 10px; font-size: 0.68rem; }
 }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE & SPACING FIXES — Rev 2
+   ═══════════════════════════════════════ */
+
+/* ── Jarak sort bar → komentar ── */
+.sort-bar {
+  margin-bottom: 1.5rem !important;
+  padding-bottom: 0.2rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.comments-list {
+  margin-top: 0.25rem;
+}
+
+/* ── Like button: tidak bisa klik ganda ── */
+.btn-like.liked {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+/* ══════════════════════
+   MOBILE RESPONSIF
+   ══════════════════════ */
+@media (max-width: 480px) {
+
+  /* Nav */
+  #navbar {
+    padding: 0 1rem;
+    height: 56px;
+  }
+  .nav-cta {
+    gap: 6px;
+  }
+  .btn-nav:not(.btn-nav-solid) {
+    display: none;
+  }
+  .btn-nav-solid {
+    font-size: 0.72rem;
+    padding: 7px 13px;
+  }
+  .logo-text { font-size: 1rem; }
+  .nav-badge { font-size: 0.55rem; }
+
+  /* Hero */
+  .hero-content {
+    padding: 0 1.2rem;
+    padding-top: 80px;
+  }
+  .hero-title { font-size: clamp(2rem, 10vw, 3rem); }
+  .hero-sub { font-size: 0.85rem; }
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .stat-glass { padding: 0.7rem; }
+  .stat-num { font-size: 1.2rem; }
+  .hero-actions { flex-direction: column; gap: 10px; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+
+  /* Features */
+  .section { padding: 3rem 1.2rem; }
+  .features-grid { grid-template-columns: 1fr; gap: 12px; }
+  .feature-card { padding: 1.3rem; }
+
+  /* Source */
+  .source-section { padding: 3rem 1.2rem; }
+  .source-inner { grid-template-columns: 1fr; gap: 2rem; }
+
+  /* Dev */
+  .dev-section { padding: 3rem 1.2rem; }
+  .dev-card { grid-template-columns: 1fr; }
+  .dev-left { min-height: 220px; }
+  .dev-right { padding: 1.5rem; }
+  .dev-title { font-size: 1.2rem; }
+
+  /* Screenshots */
+  .screenshots-section { padding: 3rem 1.2rem; }
+  .screenshots-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+
+  /* Comments */
+  .comments-section {
+    padding: 3rem 1rem 2rem;
+  }
+  .comments-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+  .section-title { font-size: 1.5rem; }
+  .compose-box { padding: 1rem; }
+  .compose-textarea { font-size: 0.85rem; min-height: 75px; }
+  .compose-bottom { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .btn-submit-comment { width: 100%; justify-content: center; }
+
+  /* Sort bar mobile */
+  .sort-bar { gap: 6px; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 4px; }
+  .sort-btn { white-space: nowrap; flex-shrink: 0; font-size: 0.7rem; padding: 5px 11px; }
+
+  /* Komentar cards */
+  .comment-card { padding: 0.9rem 1rem; }
+  .comment-actions { gap: 4px; flex-shrink: 0; }
+  .btn-edit-comment, .btn-delete-comment { padding: 4px 7px; font-size: 0.7rem; }
+  .btn-like { padding: 4px 8px; font-size: 0.72rem; }
+  .like-icon { font-size: 0.8rem; }
+  .comment-username { font-size: 0.82rem; }
+  .comment-text { font-size: 0.85rem; }
+
+  /* Edit area */
+  .edit-actions { flex-wrap: wrap; gap: 6px; }
+  .btn-edit-save, .btn-edit-cancel { font-size: 0.75rem; padding: 6px 14px; }
+
+  /* Admin panel */
+  .admin-panel { padding: 0 1rem; }
+  .admin-stats-row { grid-template-columns: repeat(2, 1fr) !important; }
+  .admin-topbar { flex-direction: column; gap: 1rem; align-items: flex-start; }
+  .admin-comment-card { flex-wrap: wrap; gap: 8px; }
+  .admin-comment-actions { width: 100%; }
+  .btn-admin-delete { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 768px) and (min-width: 481px) {
+
+  .section { padding: 4rem 1.5rem; }
+  .source-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .dev-card { grid-template-columns: 1fr; }
+  .dev-left { min-height: 240px; }
+  .hero-stats { grid-template-columns: repeat(2, 1fr); }
+  .comments-section { padding: 4rem 1.5rem 2rem; }
+  .compose-bottom { gap: 10px; }
+
+  /* Admin */
+  .admin-stats-row { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ── Load More button ── */
+.btn-load-more {
+  display: block;
+  width: 100%;
+  margin-top: 1.2rem;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(108,99,255,0.25);
+  background: rgba(108,99,255,0.07);
+  color: var(--accent);
+  font-family: var(--font-sf);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  text-align: center;
+}
+.btn-load-more:hover {
+  background: rgba(108,99,255,0.15);
+  border-color: rgba(108,99,255,0.4);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(108,99,255,0.12);
+}
+.btn-load-more:active { transform: scale(0.98); }
+
+/* ── Overflow fix on small screens ── */
+* { box-sizing: border-box; }
+body { overflow-x: hidden; }
+textarea { box-sizing: border-box; }
+.edit-textarea { width: 100% !important; }
+
+/* ── Admin comment text responsif ── */
+@media (max-width: 600px) {
+  .admin-comment-body { min-width: 0; flex: 1; overflow: hidden; }
+  .admin-comment-text {
+    word-break: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
+  }
+}

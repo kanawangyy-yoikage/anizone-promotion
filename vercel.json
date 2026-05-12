@@ -1,45 +1,21 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "**/*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.{css,js,png,jpg,jpeg,gif,svg,ico,webp,woff,woff2,ttf}",
-      "use": "@vercel/static"
-    }
+    { "src": "**/*.html", "use": "@vercel/static" },
+    { "src": "**/*.{css,js,png,jpg,jpeg,gif,svg,ico,webp,woff,woff2,ttf}", "use": "@vercel/static" }
   ],
   "routes": [
-    {
-      "src": "/admin",
-      "dest": "/admin.html"
-    },
-    {
-      "src": "/admin/",
-      "dest": "/admin.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+    { "src": "/admin", "dest": "/admin.html" },
+    { "src": "/admin/", "dest": "/admin.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "SAMEORIGIN"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" }
       ]
     }
   ]

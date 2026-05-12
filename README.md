@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🎌 AniZone 2026 — Revised
+# 🎌 AniZone 2026
 
 **Platform streaming anime modern — bebas iklan, kualitas HD, PWA-ready**
 
@@ -9,118 +9,76 @@
 ![Firebase](https://img.shields.io/badge/Firebase-Firestore-orange?style=flat-square&logo=firebase)
 ![Vercel](https://img.shields.io/badge/deployed-Vercel-black?style=flat-square&logo=vercel)
 
+[🌐 Live Demo](https://anizone-yoikage.vercel.app) · [👤 GitHub](https://github.com/kanawangyy-yoikage)
+
 </div>
 
 ---
 
-## 📁 Struktur File (Revised)
+## 📁 Struktur Folder
 
 ```
 anizone-landing/
 ├── index.html              # Halaman utama
-├── admin.html              # Panel admin moderasi komentar
+├── admin.html              # Panel admin
 ├── vercel.json             # Konfigurasi Vercel
 ├── README.md
 │
 ├── css/
-│   └── style.css           # Semua styling (Liquid Glass UI + fitur baru)
+│   └── style.css           # Semua styling
 │
 ├── js/
-│   ├── firebase-config.js  # Config Firebase & ADMIN_PASSWORD
-│   ├── comments.js         # Logika komentar (Edit, Likes, Draft, dll.)
+│   ├── firebase-config.js  # Config Firebase + password admin
+│   ├── comments.js         # Logika komentar (Edit, Like, Draft, dll)
 │   ├── admin.js            # Logika admin panel
-│   └── main.js             # Animasi & efek visual
+│   └── main.js             # Animasi & UI (particles, cursor, tilt)
 │
-└── assets/                 # Gambar: bg.jpg, pp.png, screenshot-*.png
+└── assets/
+    ├── bg.jpg                      # Background / banner
+    ├── pp.png                      # Avatar developer
+    ├── screenshot-desktop.png      # Screenshot 1366x768 (isi manual)
+    └── screenshot-mobile.png       # Screenshot 1080x2460 (isi manual)
 ```
-
----
-
-## ✨ Fitur Baru (Revised)
-
-### A. Logika (CRUD Lengkap)
-| Fitur | Deskripsi |
-|-------|-----------|
-| ✏️ **Edit Komentar** | Tombol edit muncul saat hover; hanya pemilik komentar (by deviceId) yang bisa edit |
-| ❤️ **Likes / Rating** | Tombol like per komentar; atomic `increment(1)` di Firestore; sorted by likes |
-| 🔄 **Sorting** | Urutkan komentar: Terbaru / Terlama / Terpopuler |
-| 👤 **User Profil di Firestore** | Username + deviceId disimpan ke koleksi `users` |
-| 🆔 **Device ID Unik** | Setiap perangkat punya ID unik di localStorage — mencegah penyamaran |
-| 📝 **Draft Otomatis** | Komentar yang sedang diketik otomatis tersimpan di localStorage |
-| 🕐 **Audit Trail** | Label "(disunting)" muncul di komentar yang sudah diedit + `lastEditedAt` di DB |
-
-### B. Tampilan
-| Fitur | Deskripsi |
-|-------|-----------|
-| 🦴 **Skeleton Screen** | Loading berupa shimmer placeholder mengikuti bentuk kartu komentar |
-| 🎨 **Color-coded CRUD** | Create=cyan/purple glow, Update=gold/amber, Delete=crimson/rose |
-| 🌀 **Micro-interactions** | Hover reveal tombol, active scale, disabled state lengkap |
-| ✨ **Create/Delete Animations** | Slide-in dari bawah saat tambah; shrink+slide-out saat hapus |
-| 🔍 **Dimming saat Edit** | Kartu lain redup saat mode edit aktif; border emas animated |
-| 🏜️ **Empty State** | Ilustrasi terapung + teks puitis bila belum ada komentar |
-| 📱 **Responsive Typography** | Text ellipsis di admin panel; fluid columns untuk semua ukuran layar |
-
-### C. Tambahan
-| Fitur | Deskripsi |
-|-------|-----------|
-| 📊 **Pagination + Sorting** | Load More per 10 komentar; 3 opsi urutan |
-| 🔔 **Toast Informatif** | Pesan spesifik dengan timestamp: "Dikirim pukul 14:05" |
-| 📈 **Admin: 4 Stats** | Total komentar, Hari ini, Pengguna unik, Total likes |
-| 🛡️ **Security** | Delete hanya bisa dilakukan oleh pemilik (deviceId match) atau admin |
 
 ---
 
 ## 🔥 Setup Firebase
 
-Isi **`js/firebase-config.js`** dengan config proyekmu:
-
-```javascript
-export const firebaseConfig = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID",
-};
-export const ADMIN_PASSWORD = 'password_baru_kamu';
-```
-
-### Firestore Security Rules (Recommended)
-
-```
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /comments/{commentId} {
-      allow read: if true;
-      allow create: if request.resource.data.text.size() <= 500
-                    && request.resource.data.username.size() >= 3;
-      allow update: if resource.data.deviceId == request.resource.data.deviceId;
-      allow delete: if false;
-    }
-    match /users/{userId} {
-      allow read, write: if true;
-    }
-  }
-}
-```
+1. Buka [console.firebase.google.com](https://console.firebase.google.com)
+2. Buat project → aktifkan Firestore (test mode)
+3. Buka `js/firebase-config.js` dan isi config + password admin
 
 ---
 
-## 🌐 Deploy ke Vercel
+## 🛡️ Admin Panel
 
-```bash
-vercel --prod
-```
+Akses di `/admin` atau `/admin.html`
 
-Admin panel: `/admin.html` atau `/admin`  
-Default password: `bagus4399` — **ganti sebelum deploy!**
+**Default password:** `bagus4399` → ganti di `js/firebase-config.js`
 
 ---
 
-## 👨‍💻 Developer
+## 💬 Fitur Komentar (Baru)
 
-**KanaWangyy (YoiKage)** · [GitHub](https://github.com/kanawangyy-yoikage)
+| Fitur | Keterangan |
+|-------|-----------|
+| ✏️ Edit | Pemilik komentar bisa edit teks |
+| ❤️ Like | Like dengan atomik increment |
+| 🗑️ Hapus | Pemilik bisa hapus komentarnya |
+| 📅 Sort | Terbaru / Terlama / Terpopuler |
+| 💾 Draft | Auto-save draft ke localStorage |
+| 🔖 Edited | Badge "(disunting)" setelah diedit |
+| 🖼️ Skeleton | Loading skeleton screen |
+| 📱 Responsif | Optimal di desktop & mobile |
 
-Made with 💜 · AniZone 2026 Revised
+---
+
+## 📸 Screenshot
+
+Taruh screenshot di folder `assets/`:
+- `screenshot-desktop.png` — resolusi 1366×768
+- `screenshot-mobile.png` — resolusi 1080×2460
+
+---
+
+Made with 💜 by **KanaWangyy** · AniZone 2026

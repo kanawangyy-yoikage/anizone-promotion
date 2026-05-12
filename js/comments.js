@@ -230,15 +230,21 @@ function renderComment(data, id, prepend = false) {
   const list = document.getElementById('commentsList');
   const init = (data.username || '?')[0].toUpperCase();
   const clr  = getAvatarColor(data.username || '?');
-  const isOwner = data.deviceId === DEVICE_ID || data.username === currentUsername;
+  // isOwner: cek deviceId ATAU username cocok (untuk komentar lama tanpa deviceId)
+  const isOwner = (data.deviceId && data.deviceId === DEVICE_ID) ||
+                  (currentUsername && data.username === currentUsername);
   const liked = !!likedComments[id];
   const likeCount = data.likes || 0;
   const isEdited = !!data.lastEditedAt;
+  // Simpan raw text di dataset untuk edit (hindari double-sanitize)
+  const rawText = data.text || '';
 
   const card = document.createElement('div');
   card.className = 'comment-card';
   card.dataset.id = id;
   card.dataset.deviceId = data.deviceId || '';
+  card.dataset.username = data.username || '';
+  card.dataset.rawText = rawText;
   card.innerHTML = `
     <div class="comment-head">
       <div class="comment-head-left">
@@ -249,25 +255,41 @@ function renderComment(data, id, prepend = false) {
         </div>
       </div>
       <div class="comment-actions">
-        <button class="btn-like ${liked ? 'liked' : ''}" onclick="window.__likeComment('${id}', this)">
+        <button class="btn-like ${liked ? 'liked' : ''}" data-id="${id}" title="${liked ? 'Sudah dilike' : 'Beri like'}">
           <span class="like-icon">${liked ? '❤️' : '🤍'}</span>
           <span class="like-count">${likeCount}</span>
         </button>
         ${isOwner ? `
-          <button class="btn-edit-comment" onclick="window.__editComment('${id}', this)" title="Edit komentar">✏️</button>
-          <button class="btn-delete-comment" onclick="window.__deleteCommentUser('${id}', this)" title="Hapus komentar">🗑️</button>
+          <button class="btn-edit-comment" data-id="${id}" title="Edit komentar">✏️</button>
+          <button class="btn-delete-comment" data-id="${id}" title="Hapus komentar">🗑️</button>
         ` : ''}
       </div>
     </div>
-    <div class="comment-text" id="ctext-${id}">${sanitize(data.text || '')}</div>
+    <div class="comment-text" id="ctext-${id}">${sanitize(rawText)}</div>
     <div class="comment-edit-area" id="cedit-${id}" style="display:none">
-      <textarea class="edit-textarea" id="etextarea-${id}" maxlength="500">${sanitize(data.text || '')}</textarea>
+      <textarea class="edit-textarea" id="etextarea-${id}" maxlength="500"></textarea>
       <div class="edit-actions">
-        <button class="btn-edit-save" onclick="window.__saveEdit('${id}')">💾 Simpan</button>
-        <button class="btn-edit-cancel" onclick="window.__cancelEdit('${id}')">✕ Batal</button>
+        <button class="btn-edit-save" data-id="${id}">💾 Simpan</button>
+        <button class="btn-edit-cancel" data-id="${id}">✕ Batal</button>
       </div>
     </div>
   `;
+
+  // Isi textarea dengan raw text (bukan innerHTML)
+  const ta = card.querySelector(`#etextarea-${id}`);
+  if (ta) ta.value = rawText;
+
+  // Event delegation — lebih reliable dari onclick inline
+  card.addEventListener('click', e => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const btnId = btn.dataset.id;
+    if (btn.classList.contains('btn-like'))           window.__likeComment(btnId, btn);
+    else if (btn.classList.contains('btn-edit-comment'))   window.__editComment(btnId, btn);
+    else if (btn.classList.contains('btn-delete-comment')) window.__deleteCommentUser(btnId, btn);
+    else if (btn.classList.contains('btn-edit-save'))      window.__saveEdit(btnId);
+    else if (btn.classList.contains('btn-edit-cancel'))    window.__cancelEdit(btnId);
+  });
 
   if (prepend) {
     card.style.animation = 'commentSlideIn 0.45s cubic-bezier(0.34,1.56,0.64,1) both';
@@ -391,8 +413,13 @@ document.getElementById('submitCommentBtn').addEventListener('click', () => {
 
 // ── Like Komentar ─────────────────────────────────────
 window.__likeComment = async function(id, btn) {
-  if (likedComments[id]) return; // sudah di-like
+  if (!id) return;
+  if (likedComments[id]) {
+    showToast('Kamu sudah memberi like pada komentar ini.', 'info');
+    return;
+  }
 
+  // Optimistic UI update dulu
   likedComments[id] = true;
   saveLikes();
 
@@ -402,27 +429,46 @@ window.__likeComment = async function(id, btn) {
   countEl.textContent = current + 1;
   iconEl.textContent = '❤️';
   btn.classList.add('liked');
-  btn.style.transform = 'scale(1.3)';
-  setTimeout(() => btn.style.transform = '', 300);
+  btn.title = 'Sudah dilike';
+
+  // Animasi bounce
+  btn.style.transform = 'scale(1.4)';
+  setTimeout(() => { btn.style.transform = 'scale(1)'; }, 300);
 
   try {
-    await updateDoc(doc(db, 'comments', id), { likes: increment(1) });
-  } catch (e) {
-    // Rollback visual jika gagal
-    likedComments[id] = false;
-    saveLikes();
-    countEl.textContent = current;
-    iconEl.textContent = '🤍';
-    btn.classList.remove('liked');
-    showToast('Gagal memberi like.', 'error');
+    // Gunakan setDoc merge agar field `likes` terbuat otomatis di komentar lama
+    const ref = doc(db, 'comments', id);
+    await updateDoc(ref, { likes: increment(1) });
+  } catch (err) {
+    // Jika updateDoc gagal karena field tidak ada, buat field dengan setDoc
+    try {
+      await setDoc(doc(db, 'comments', id), { likes: current + 1 }, { merge: true });
+    } catch (e2) {
+      // Rollback visual
+      likedComments[id] = false;
+      saveLikes();
+      countEl.textContent = current;
+      iconEl.textContent = '🤍';
+      btn.classList.remove('liked');
+      btn.title = 'Beri like';
+      showToast('Gagal memberi like. Coba lagi.', 'error');
+    }
   }
 };
 
 // ── Edit Komentar ─────────────────────────────────────
 window.__editComment = function(id, btn) {
+  if (!id) return;
+  const card   = document.querySelector(`.comment-card[data-id="${id}"]`);
+  if (!card) return;
   const textEl = document.getElementById(`ctext-${id}`);
   const editEl = document.getElementById(`cedit-${id}`);
-  const card   = btn.closest('.comment-card');
+  const ta     = document.getElementById(`etextarea-${id}`);
+
+  if (!textEl || !editEl || !ta) return;
+
+  // Isi textarea dengan teks saat ini (dari textContent, bukan innerHTML)
+  ta.value = textEl.textContent || card.dataset.rawText || '';
 
   // Efek dimming kartu lain
   document.querySelectorAll('.comment-card').forEach(c => {
@@ -432,9 +478,12 @@ window.__editComment = function(id, btn) {
 
   textEl.style.display = 'none';
   editEl.style.display = 'block';
-  const ta = document.getElementById(`etextarea-${id}`);
-  ta.focus();
-  ta.setSelectionRange(ta.value.length, ta.value.length);
+
+  // Fokus dan cursor di akhir
+  setTimeout(() => {
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }, 50);
 };
 
 window.__cancelEdit = function(id) {

@@ -10,16 +10,12 @@
 </head>
 <body>
 
-<!-- CURSOR GLOW -->
 <div class="cursor-glow" id="cursorGlow"></div>
-<!-- CANVAS PARTICLES -->
 <canvas id="particles"></canvas>
-<!-- LIQUID GLASS ORBS -->
 <div class="glass-orb orb1"></div>
 <div class="glass-orb orb2"></div>
 <div class="glass-orb orb3"></div>
 <div class="glass-orb orb4"></div>
-<!-- SCANLINES -->
 <div class="scanlines"></div>
 
 <!-- USERNAME MODAL -->
@@ -27,12 +23,25 @@
   <div class="modal-box">
     <div class="modal-icon">👤</div>
     <h2 class="modal-title">Pilih Username</h2>
-    <p class="modal-sub">Sebelum berkomentar, pilih username yang akan ditampilkan di kolom komentar. Username hanya bisa diubah secara manual.</p>
+    <p class="modal-sub">Sebelum berkomentar, pilih username yang akan ditampilkan. Username bisa diubah kapan saja.</p>
     <div class="modal-input-wrap">
       <input type="text" class="modal-input" id="usernameInput" placeholder="Masukkan username kamu..." maxlength="30" autocomplete="off" spellcheck="false">
     </div>
     <p class="modal-error" id="usernameError"></p>
     <button class="modal-btn" id="saveUsernameBtn">Simpan &amp; Lanjutkan →</button>
+  </div>
+</div>
+
+<!-- DELETE CONFIRM -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div style="font-size:2rem;margin-bottom:0.5rem">🗑️</div>
+    <div class="confirm-title">Hapus Komentar?</div>
+    <div class="confirm-sub">Komentar akan dihapus permanen dan tidak bisa dikembalikan.</div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" id="confirmYes">Ya, Hapus</button>
+      <button class="btn-confirm-no" id="confirmNo">Batal</button>
+    </div>
   </div>
 </div>
 
@@ -43,7 +52,7 @@
 <nav id="navbar">
   <a href="https://anizone-yoikage.vercel.app" target="_blank" class="nav-logo">
     <div class="logo-glass">
-      <img src="bg.jpg" alt="AniZone Logo" onerror="this.style.display='none'">
+      <img src="assets/bg.jpg" alt="AniZone Logo" onerror="this.style.display='none'">
       <span class="logo-fallback"></span>
     </div>
     <span class="logo-text">AniZone</span>
@@ -53,8 +62,7 @@
     <a href="#comments" class="btn-nav">💬 Komentar</a>
     <a href="https://github.com/kanawangyy-yoikage" target="_blank" class="btn-nav">GitHub</a>
     <a href="https://anizone-yoikage.vercel.app" target="_blank" class="btn-nav btn-nav-solid">
-      <span class="btn-shine"></span>
-      Nonton Sekarang
+      <span class="btn-shine"></span>Nonton Sekarang
     </a>
   </div>
 </nav>
@@ -63,7 +71,7 @@
 <section class="hero" id="home">
   <div class="hero-bg"></div>
   <div class="hero-grid-line"></div>
-  <img src="bg.jpg" alt="Banner" class="hero-banner" onerror="this.style.display='none'">
+  <img src="assets/bg.jpg" alt="Banner" class="hero-banner" onerror="this.style.display='none'">
   <div class="hero-content">
     <div class="hero-eyebrow">
       <div class="pulse-dot"></div>
@@ -88,14 +96,14 @@
       </a>
     </div>
     <div class="hero-stats">
-      <div class="stat-glass"><span class="stat-num" data-count="HD">HD</span><span class="stat-label">Kualitas Video</span></div>
+      <div class="stat-glass"><span class="stat-num">HD</span><span class="stat-label">Kualitas Video</span></div>
       <div class="stat-glass"><span class="stat-num" data-count="0">0</span><span class="stat-label">Iklan Pop-up</span></div>
-      <div class="stat-glass"><span class="stat-num" data-count="PWA">PWA</span><span class="stat-label">Installable App</span></div>
+      <div class="stat-glass"><span class="stat-num">PWA</span><span class="stat-label">Installable App</span></div>
       <div class="stat-glass"><span class="stat-num">∞</span><span class="stat-label">Koleksi Anime</span></div>
     </div>
     <div class="source-badge glass-micro">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-      <span>Situs ini masih dalam tahap <strong>pengembangan.</strong> Kami menghargai pengertian Anda atas ketidaknyamanan yang mungkin terjadi.</span>
+      <span>Situs ini masih dalam tahap <strong>pengembangan.</strong> Kami menghargai pengertian Anda.</span>
     </div>
   </div>
 </section>
@@ -107,13 +115,13 @@
     <span class="tech-chip-strip glass-chip">Progressive Web App</span>
     <span class="tech-chip-strip glass-chip">IndexedDB</span>
     <span class="tech-chip-strip glass-chip">Real-time Fetch</span>
-    <span class="tech-chip-strip glass-chip">Responsive Design</span>
+    <span class="tech-chip-strip glass-chip">Firebase Firestore</span>
     <span class="tech-chip-strip glass-chip">Vercel Deploy</span>
     <span class="tech-chip-strip glass-chip">Multi-server Stream</span>
     <span class="tech-chip-strip glass-chip">Progressive Web App</span>
     <span class="tech-chip-strip glass-chip">IndexedDB</span>
     <span class="tech-chip-strip glass-chip">Real-time Fetch</span>
-    <span class="tech-chip-strip glass-chip">Responsive Design</span>
+    <span class="tech-chip-strip glass-chip">Firebase Firestore</span>
     <span class="tech-chip-strip glass-chip">Vercel Deploy</span>
     <span class="tech-chip-strip glass-chip">Multi-server Stream</span>
   </div>
@@ -126,12 +134,12 @@
     <h2 class="section-title reveal">Fitur yang bikin <span>beda</span></h2>
     <p class="section-desc reveal">Dirancang dari nol untuk pengalaman nonton anime terbaik — bukan sekadar clone biasa.</p>
     <div class="features-grid">
-      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon purple">🚫</div><h3 class="feat-title">Zero Iklan Pop-up</h3><p class="feat-desc">Scrape langsung dari Samehadaku dengan filtering iklan total. Nonton tanpa jeda paksa, tanpa redirect aneh, tanpa gangguan.</p></div>
-      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon cyan">📺</div><h3 class="feat-title">Streaming HD Multi-server</h3><p class="feat-desc">Pilih server streaming terbaik sesuai koneksimu. Kualitas tinggi tersedia di semua opsi server yang disediakan.</p></div>
-      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon green">📲</div><h3 class="feat-title">Install Langsung ke HP</h3><p class="feat-desc">Standar PWA 2026 — bisa diinstal seperti aplikasi native di Android maupun iOS tanpa perlu ke Play Store.</p></div>
-      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon gold">💾</div><h3 class="feat-title">Riwayat &amp; Favorit Lokal</h3><p class="feat-desc">Pakai IndexedDB untuk menyimpan riwayat tontonan dan daftar favorit langsung di perangkatmu — aman dan cepat.</p></div>
-      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon red">⚡</div><h3 class="feat-title">Real-time Data Fetching</h3><p class="feat-desc">Konten diperbarui secara real-time dari sumber. Anime terbaru selalu tersedia segera setelah tayang.</p></div>
-      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon pink">🔍</div><h3 class="feat-title">Search &amp; Kategori</h3><p class="feat-desc">Cari anime dengan mudah, filter berdasarkan kategori, dan temukan tontonan baru yang sesuai selera.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon purple">🚫</div><h3 class="feat-title">Zero Iklan Pop-up</h3><p class="feat-desc">Scrape langsung dari Samehadaku dengan filtering iklan total. Nonton tanpa jeda paksa.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon cyan">📺</div><h3 class="feat-title">Streaming HD Multi-server</h3><p class="feat-desc">Pilih server streaming terbaik sesuai koneksimu. Kualitas tinggi tersedia di semua opsi.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon green">📲</div><h3 class="feat-title">Install Langsung ke HP</h3><p class="feat-desc">Standar PWA 2026 — bisa diinstal seperti aplikasi native di Android maupun iOS.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon gold">💾</div><h3 class="feat-title">Riwayat &amp; Favorit Lokal</h3><p class="feat-desc">IndexedDB untuk menyimpan riwayat tontonan dan daftar favorit langsung di perangkatmu.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon red">⚡</div><h3 class="feat-title">Real-time Data Fetching</h3><p class="feat-desc">Konten diperbarui secara real-time. Anime terbaru selalu tersedia segera setelah tayang.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon pink">💬</div><h3 class="feat-title">Komentar Komunitas</h3><p class="feat-desc">Sistem komentar real-time — edit, like, dan hapus komentar milikmu sendiri dengan mudah.</p></div>
     </div>
   </div>
 </section>
@@ -140,21 +148,21 @@
 <div class="source-section">
   <div class="source-inner">
     <div>
-      <p class="section-label reveal">Transparansi Sumber</p>
-      <h2 class="section-title reveal">Data dari <span>Samehadaku</span>,<br>bersih tanpa iklan</h2>
-      <p class="section-desc reveal" style="margin-bottom:1.5rem;">AniZone mengambil data anime langsung dari Samehadaku — salah satu sumber anime terlengkap di Indonesia — kemudian menyajikannya kembali dengan antarmuka modern yang bersih dari semua iklan.</p>
-      <div style="display:flex; gap:10px; flex-wrap:wrap;" class="reveal">
-        <span class="badge-scraped glass-micro"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Sumber: Samehadaku</span>
+      <p class="section-label reveal">Sumber Data</p>
+      <h2 class="section-title reveal">Ditenagai oleh <span>Samehadaku</span></h2>
+      <p class="section-desc reveal" style="margin-bottom:1.5rem">Konten diambil dari database anime terlengkap Indonesia, disajikan ulang dengan antarmuka bersih tanpa iklan.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <span class="badge-scraped glass-micro"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Data Samehadaku</span>
         <span class="badge-no-ads glass-micro"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Bebas Iklan</span>
       </div>
     </div>
     <div class="source-visual reveal">
       <div class="flow-box glass-card"><span class="flow-emoji">🌐</span><div><div class="flow-sub">Sumber Data</div><div>Samehadaku — Database Anime Indonesia</div></div></div>
       <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-dot"></div></div>
-      <div class="flow-box glass-card" style="--card-accent:rgba(108,99,255,0.35)"><span class="flow-emoji">⚙️</span><div><div class="flow-sub">Proses</div><div>Scraping + Filtering Iklan + Optimasi</div></div></div>
+      <div class="flow-box glass-card"><span class="flow-emoji">⚙️</span><div><div class="flow-sub">Proses</div><div>Scraping + Filtering Iklan + Optimasi</div></div></div>
       <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-dot"></div></div>
-      <div class="flow-box glass-card" style="--card-accent:rgba(0,229,255,0.3)"><span class="flow-emoji">✨</span><div><div class="flow-sub">Hasil</div><div>AniZone — Clean, HD, No Ads</div></div></div>
-      <p class="source-disclaimer glass-micro">⚠️ AniZone bukan afiliasi resmi Samehadaku. Ini adalah proyek indie yang menampilkan konten dari sumber tersebut dengan tampilan lebih bersih.</p>
+      <div class="flow-box glass-card"><span class="flow-emoji">✨</span><div><div class="flow-sub">Hasil</div><div>AniZone — Clean, HD, No Ads</div></div></div>
+      <p class="source-disclaimer glass-micro">⚠️ AniZone bukan afiliasi resmi Samehadaku. Ini adalah proyek indie.</p>
     </div>
   </div>
 </div>
@@ -165,26 +173,24 @@
   <h2 class="section-title reveal" style="text-align:center;margin-bottom:2.5rem">Meet the <span>Developer</span></h2>
   <div class="dev-card glass-card-xl reveal">
     <div class="dev-left">
-      <img src="bg.jpg" alt="" class="dev-banner" onerror="this.style.display='none'">
+      <img src="assets/bg.jpg" alt="" class="dev-banner" onerror="this.style.display='none'">
       <div class="dev-left-overlay"></div>
       <div class="dev-left-content">
-        <div class="dev-avatar-ring"><img src="pp.png" alt="KanaWangyy" onerror="this.style.background='linear-gradient(135deg,#6c63ff,#00e5ff)'"></div>
+        <div class="dev-avatar-ring"><img src="assets/pp.png" alt="KanaWangyy" onerror="this.style.background='linear-gradient(135deg,#6c63ff,#00e5ff)'"></div>
         <div class="dev-name">KanaWangyy</div>
         <div class="dev-handle">@yoikagemodekana</div>
         <div class="dev-role-badge glass-micro">Official Developer</div>
       </div>
     </div>
     <div class="dev-right">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.5rem">
-        <h3 class="dev-title">KanaWangyy <span style="color:var(--accent2)">(YoiKage)</span></h3>
-      </div>
-      <p class="dev-bio">Official Developer dari AniZone 2026. Merancang pengalaman streaming Web App modern yang responsif dan bebas iklan. Bergabunglah dengan komunitas untuk info update source dan bug fixes terbaru.</p>
+      <h3 class="dev-title">KanaWangyy <span style="color:var(--accent2)">(YoiKage)</span></h3>
+      <p class="dev-bio">Official Developer dari AniZone 2026. Merancang pengalaman streaming Web App modern yang responsif dan bebas iklan. Bergabunglah dengan komunitas untuk info update dan bug fixes terbaru.</p>
       <div class="dev-tech-stack">
         <span class="tech-chip glass-chip">PWA</span>
         <span class="tech-chip glass-chip">JavaScript</span>
+        <span class="tech-chip glass-chip">Firebase</span>
         <span class="tech-chip glass-chip">IndexedDB</span>
         <span class="tech-chip glass-chip">Vercel</span>
-        <span class="tech-chip glass-chip">REST API</span>
         <span class="tech-chip glass-chip">Responsive UI</span>
       </div>
       <a href="https://github.com/kanawangyy-yoikage" target="_blank" class="dev-follow liquid-btn">
@@ -196,12 +202,51 @@
   </div>
 </div>
 
-<!-- DIVIDER -->
+<!-- SCREENSHOTS SECTION -->
+<div class="section-divider"></div>
+<div class="screenshots-section">
+  <p class="section-label reveal" style="text-align:center">Preview</p>
+  <h2 class="section-title reveal" style="text-align:center;margin-bottom:0.5rem">Tampilan <span>AniZone</span></h2>
+  <p class="section-desc reveal" style="text-align:center;max-width:500px;margin:0 auto 0">Antarmuka bersih di semua ukuran layar</p>
+  <div class="screenshots-grid">
+    <div class="screenshot-card reveal" data-delay="0">
+      <div id="ssDesktopWrap">
+        <img src="assets/screenshot-desktop.png" alt="AniZone Desktop"
+          onload="this.style.display='block';document.getElementById('ssDesktopPh').style.display='none'"
+          onerror="this.style.display='none'"
+          style="display:none">
+        <div class="screenshot-placeholder" id="ssDesktopPh">
+          <div class="ph-icon">🖥️</div>
+          <div>
+            <strong style="color:var(--text)">Screenshot Desktop</strong><br>
+            <span style="font-size:0.75rem">Taruh <code style="color:var(--accent3)">screenshot-desktop.png</code> di folder <code style="color:var(--accent)">assets/</code></span>
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-label"><span class="screenshot-device-icon">🖥️</span> Desktop · 1366×768</div>
+    </div>
+    <div class="screenshot-card reveal" data-delay="120">
+      <div id="ssMobileWrap">
+        <img src="assets/screenshot-mobile.png" alt="AniZone Mobile"
+          onload="this.style.display='block';document.getElementById('ssMobilePh').style.display='none'"
+          onerror="this.style.display='none'"
+          style="display:none">
+        <div class="screenshot-placeholder screenshot-placeholder-mobile" id="ssMobilePh">
+          <div class="ph-icon">📱</div>
+          <div>
+            <strong style="color:var(--text)">Screenshot Mobile</strong><br>
+            <span style="font-size:0.75rem">Taruh <code style="color:var(--accent3)">screenshot-mobile.png</code> di folder <code style="color:var(--accent)">assets/</code></span>
+          </div>
+        </div>
+      </div>
+      <div class="screenshot-label"><span class="screenshot-device-icon">📱</span> Mobile · 1080×2460</div>
+    </div>
+  </div>
+</div>
+
 <div class="section-divider"></div>
 
-<!-- ═══════════════════════════════════════
-     COMMENTS SECTION
-     ═══════════════════════════════════════ -->
+<!-- COMMENTS SECTION -->
 <section id="comments" class="comments-section">
   <div class="comments-header">
     <div>
@@ -224,17 +269,15 @@
   <div class="compose-box">
     <div class="compose-top">
       <div class="compose-avatar" id="composeAvatar">?</div>
-      <div>
+      <div style="flex:1">
         <div class="compose-username"><span id="composeUsernameName">Belum ada username</span></div>
         <div style="font-size:0.72rem;color:var(--text2);font-weight:400;margin-top:2px">Komentar kamu akan muncul secara publik</div>
       </div>
+      <span class="draft-indicator" id="draftIndicator" style="display:none">● DRAFT</span>
     </div>
     <textarea class="compose-textarea" id="commentTextarea" placeholder="Tulis komentarmu tentang AniZone..." maxlength="500" rows="3"></textarea>
     <div class="compose-bottom">
-      <div class="compose-bottom-left">
-        <span class="compose-char" id="charCounter">0 / 500</span>
-        <span class="draft-indicator" id="draftIndicator" style="display:none">&#128203; Draft tersimpan</span>
-      </div>
+      <span class="compose-char" id="charCounter">0 / 500</span>
       <button class="btn-submit-comment" id="submitCommentBtn">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
         Kirim Komentar
@@ -242,24 +285,19 @@
     </div>
   </div>
 
-  <!-- Sort -->
-  <div class="sort-row">
-    <span class="sort-label">Urutan:</span>
-    <button class="sort-btn active" data-sort="newest">&#128336; Terbaru</button>
-    <button class="sort-btn" data-sort="oldest">&#128197; Terlama</button>
-    <button class="sort-btn" data-sort="popular">&#10084;&#65039; Terpopuler</button>
+  <!-- Sort Bar -->
+  <div class="sort-bar">
+    <span class="sort-label">Urutkan:</span>
+    <button class="sort-btn active" data-sort="newest">🕐 Terbaru</button>
+    <button class="sort-btn" data-sort="oldest">📅 Terlama</button>
+    <button class="sort-btn" data-sort="popular">❤️ Terpopuler</button>
   </div>
 
-  <!-- Loading -->
   <div class="comments-loading" id="commentsLoading" style="display:none">
     <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
   </div>
-
-  <!-- List -->
   <div class="comments-list" id="commentsList"></div>
-
-  <!-- Load More -->
-  <button class="btn-load-more" id="loadMoreBtn" style="display:none">Muat lebih banyak komentar &#8595;</button>
+  <button class="btn-load-more" id="loadMoreBtn" style="display:none">Muat lebih banyak komentar ↓</button>
 </section>
 
 <div class="section-divider"></div>
@@ -287,24 +325,20 @@
   <div class="footer-glass">
     <p style="margin-bottom:8px"><strong style="color:var(--text)">AniZone 2026</strong> — dibuat oleh <a href="https://github.com/kanawangyy-yoikage" target="_blank">KanaWangyy (YoiKage)</a></p>
     <p>Konten di-scrape dari <strong>Samehadaku</strong>. AniZone bukan afiliasi resmi situs tersebut.</p>
-    <p style="margin-top:8px;font-size:0.75rem;opacity:0.5">AniZone · No Ads · PWA · HD Quality</p>
+    <p style="margin-top:8px;font-size:0.75rem;opacity:0.5">AniZone · No Ads · PWA · HD Quality · Firebase Powered</p>
   </div>
 </footer>
 
-<!-- Delete Confirm Modal -->
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <div style="font-size:2rem;margin-bottom:0.5rem">&#128465;&#65039;</div>
-    <div class="confirm-title">Hapus Komentar?</div>
-    <div class="confirm-sub">Komentar akan dihapus permanen dan tidak bisa dikembalikan.</div>
-    <div class="confirm-btns">
-      <button class="btn-confirm-yes" id="confirmYes">Ya, Hapus</button>
-      <button class="btn-confirm-no" id="confirmNo">Batal</button>
-    </div>
-  </div>
-</div>
+<script>
+// Draft indicator
+const _ta = document.getElementById('commentTextarea');
+const _di = document.getElementById('draftIndicator');
+if (_ta && _di) {
+  _ta.addEventListener('input', () => { _di.style.display = _ta.value.length > 0 ? 'inline' : 'none'; });
+  if (_ta.value && _ta.value.length > 0) _di.style.display = 'inline';
+}
+</script>
 
-<!-- Firebase SDK (ESM) -->
 <script type="module" src="js/comments.js"></script>
 <script src="js/main.js"></script>
 </body>
