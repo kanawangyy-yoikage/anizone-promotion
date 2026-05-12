@@ -345,19 +345,10 @@ async function loadComments(more = false) {
   }
 }
 
-// Realtime badge jumlah komentar (dengan error handling untuk timeout)
-try {
-  onSnapshot(collection(db, 'comments'), snap => {
-    document.getElementById('commentsCountBadge').textContent = `${snap.size} komentar`;
-  }, (err) => {
-    // Abaikan error timeout (umum di lingkungan testing/sandbox)
-    if (err.code !== 'unavailable' && err.code !== 'permission-denied') {
-      console.warn('Firestore listener error:', err.code);
-    }
-  });
-} catch (e) {
-  // Firestore tidak tersedia — badge tetap default
-}
+// Realtime badge jumlah komentar
+onSnapshot(collection(db, 'comments'), snap => {
+  document.getElementById('commentsCountBadge').textContent = `${snap.size} komentar`;
+});
 
 loadComments();
 document.getElementById('loadMoreBtn').addEventListener('click', () => loadComments(true));
