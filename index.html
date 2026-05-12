@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AniZone 2026 — Nonton Anime HD Tanpa Iklan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- CURSOR GLOW -->
+<div class="cursor-glow" id="cursorGlow"></div>
+<!-- CANVAS PARTICLES -->
+<canvas id="particles"></canvas>
+<!-- LIQUID GLASS ORBS -->
+<div class="glass-orb orb1"></div>
+<div class="glass-orb orb2"></div>
+<div class="glass-orb orb3"></div>
+<div class="glass-orb orb4"></div>
+<!-- SCANLINES -->
+<div class="scanlines"></div>
+
+<!-- USERNAME MODAL -->
+<div class="modal-overlay" id="usernameModal">
+  <div class="modal-box">
+    <div class="modal-icon">👤</div>
+    <h2 class="modal-title">Pilih Username</h2>
+    <p class="modal-sub">Sebelum berkomentar, pilih username yang akan ditampilkan di kolom komentar. Username hanya bisa diubah secara manual.</p>
+    <div class="modal-input-wrap">
+      <input type="text" class="modal-input" id="usernameInput" placeholder="Masukkan username kamu..." maxlength="30" autocomplete="off" spellcheck="false">
+    </div>
+    <p class="modal-error" id="usernameError"></p>
+    <button class="modal-btn" id="saveUsernameBtn">Simpan &amp; Lanjutkan →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="https://anizone-yoikage.vercel.app" target="_blank" class="nav-logo">
+    <div class="logo-glass">
+      <img src="bg.jpg" alt="AniZone Logo" onerror="this.style.display='none'">
+      <span class="logo-fallback"></span>
+    </div>
+    <span class="logo-text">AniZone</span>
+    <span class="nav-badge">2026</span>
+  </a>
+  <div class="nav-cta">
+    <a href="#comments" class="btn-nav">💬 Komentar</a>
+    <a href="https://github.com/kanawangyy-yoikage" target="_blank" class="btn-nav">GitHub</a>
+    <a href="https://anizone-yoikage.vercel.app" target="_blank" class="btn-nav btn-nav-solid">
+      <span class="btn-shine"></span>
+      Nonton Sekarang
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-grid-line"></div>
+  <img src="bg.jpg" alt="Banner" class="hero-banner" onerror="this.style.display='none'">
+  <div class="hero-content">
+    <div class="hero-eyebrow">
+      <div class="pulse-dot"></div>
+      <span>Live · HD Streaming Platform</span>
+    </div>
+    <h1 class="hero-title">
+      <div class="line1 char-animate">Nonton Anime</div>
+      <div class="line2 char-animate">Tanpa Gangguan</div>
+    </h1>
+    <p class="hero-sub">
+      Platform streaming anime modern berstandar <strong>PWA 2026</strong> — bebas iklan pop-up, kualitas HD, tersedia di semua perangkat.
+    </p>
+    <div class="hero-actions">
+      <a href="https://anizone-yoikage.vercel.app" target="_blank" class="btn-primary liquid-btn">
+        <span class="btn-liquid"></span>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        Mulai Nonton
+      </a>
+      <a href="#features" class="btn-secondary glass-btn">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Fitur Lengkap
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-glass"><span class="stat-num" data-count="HD">HD</span><span class="stat-label">Kualitas Video</span></div>
+      <div class="stat-glass"><span class="stat-num" data-count="0">0</span><span class="stat-label">Iklan Pop-up</span></div>
+      <div class="stat-glass"><span class="stat-num" data-count="PWA">PWA</span><span class="stat-label">Installable App</span></div>
+      <div class="stat-glass"><span class="stat-num">∞</span><span class="stat-label">Koleksi Anime</span></div>
+    </div>
+    <div class="source-badge glass-micro">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span>Situs ini masih dalam tahap <strong>pengembangan.</strong> Kami menghargai pengertian Anda atas ketidaknyamanan yang mungkin terjadi.</span>
+    </div>
+  </div>
+</section>
+
+<!-- TECH STRIP -->
+<div class="tech-strip">
+  <div class="tech-strip-inner marquee-track">
+    <span class="tech-strip-label">Dibangun dengan</span>
+    <span class="tech-chip-strip glass-chip">Progressive Web App</span>
+    <span class="tech-chip-strip glass-chip">IndexedDB</span>
+    <span class="tech-chip-strip glass-chip">Real-time Fetch</span>
+    <span class="tech-chip-strip glass-chip">Responsive Design</span>
+    <span class="tech-chip-strip glass-chip">Vercel Deploy</span>
+    <span class="tech-chip-strip glass-chip">Multi-server Stream</span>
+    <span class="tech-chip-strip glass-chip">Progressive Web App</span>
+    <span class="tech-chip-strip glass-chip">IndexedDB</span>
+    <span class="tech-chip-strip glass-chip">Real-time Fetch</span>
+    <span class="tech-chip-strip glass-chip">Responsive Design</span>
+    <span class="tech-chip-strip glass-chip">Vercel Deploy</span>
+    <span class="tech-chip-strip glass-chip">Multi-server Stream</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+  <div class="section">
+    <p class="section-label reveal">Kenapa AniZone?</p>
+    <h2 class="section-title reveal">Fitur yang bikin <span>beda</span></h2>
+    <p class="section-desc reveal">Dirancang dari nol untuk pengalaman nonton anime terbaik — bukan sekadar clone biasa.</p>
+    <div class="features-grid">
+      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon purple">🚫</div><h3 class="feat-title">Zero Iklan Pop-up</h3><p class="feat-desc">Scrape langsung dari Samehadaku dengan filtering iklan total. Nonton tanpa jeda paksa, tanpa redirect aneh, tanpa gangguan.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon cyan">📺</div><h3 class="feat-title">Streaming HD Multi-server</h3><p class="feat-desc">Pilih server streaming terbaik sesuai koneksimu. Kualitas tinggi tersedia di semua opsi server yang disediakan.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon green">📲</div><h3 class="feat-title">Install Langsung ke HP</h3><p class="feat-desc">Standar PWA 2026 — bisa diinstal seperti aplikasi native di Android maupun iOS tanpa perlu ke Play Store.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="0"><div class="card-glow-spot"></div><div class="feat-icon gold">💾</div><h3 class="feat-title">Riwayat &amp; Favorit Lokal</h3><p class="feat-desc">Pakai IndexedDB untuk menyimpan riwayat tontonan dan daftar favorit langsung di perangkatmu — aman dan cepat.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="80"><div class="card-glow-spot"></div><div class="feat-icon red">⚡</div><h3 class="feat-title">Real-time Data Fetching</h3><p class="feat-desc">Konten diperbarui secara real-time dari sumber. Anime terbaru selalu tersedia segera setelah tayang.</p></div>
+      <div class="feature-card glass-card reveal" data-delay="160"><div class="card-glow-spot"></div><div class="feat-icon pink">🔍</div><h3 class="feat-title">Search &amp; Kategori</h3><p class="feat-desc">Cari anime dengan mudah, filter berdasarkan kategori, dan temukan tontonan baru yang sesuai selera.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SOURCE SECTION -->
+<div class="source-section">
+  <div class="source-inner">
+    <div>
+      <p class="section-label reveal">Transparansi Sumber</p>
+      <h2 class="section-title reveal">Data dari <span>Samehadaku</span>,<br>bersih tanpa iklan</h2>
+      <p class="section-desc reveal" style="margin-bottom:1.5rem;">AniZone mengambil data anime langsung dari Samehadaku — salah satu sumber anime terlengkap di Indonesia — kemudian menyajikannya kembali dengan antarmuka modern yang bersih dari semua iklan.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;" class="reveal">
+        <span class="badge-scraped glass-micro"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Sumber: Samehadaku</span>
+        <span class="badge-no-ads glass-micro"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20,6 9,17 4,12"/></svg> Bebas Iklan</span>
+      </div>
+    </div>
+    <div class="source-visual reveal">
+      <div class="flow-box glass-card"><span class="flow-emoji">🌐</span><div><div class="flow-sub">Sumber Data</div><div>Samehadaku — Database Anime Indonesia</div></div></div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-dot"></div></div>
+      <div class="flow-box glass-card" style="--card-accent:rgba(108,99,255,0.35)"><span class="flow-emoji">⚙️</span><div><div class="flow-sub">Proses</div><div>Scraping + Filtering Iklan + Optimasi</div></div></div>
+      <div class="flow-arrow"><div class="flow-arrow-line"></div><div class="flow-arrow-dot"></div></div>
+      <div class="flow-box glass-card" style="--card-accent:rgba(0,229,255,0.3)"><span class="flow-emoji">✨</span><div><div class="flow-sub">Hasil</div><div>AniZone — Clean, HD, No Ads</div></div></div>
+      <p class="source-disclaimer glass-micro">⚠️ AniZone bukan afiliasi resmi Samehadaku. Ini adalah proyek indie yang menampilkan konten dari sumber tersebut dengan tampilan lebih bersih.</p>
+    </div>
+  </div>
+</div>
+
+<!-- DEVELOPER SECTION -->
+<div class="dev-section">
+  <p class="section-label reveal" style="text-align:center">Sang Kreator</p>
+  <h2 class="section-title reveal" style="text-align:center;margin-bottom:2.5rem">Meet the <span>Developer</span></h2>
+  <div class="dev-card glass-card-xl reveal">
+    <div class="dev-left">
+      <img src="bg.jpg" alt="" class="dev-banner" onerror="this.style.display='none'">
+      <div class="dev-left-overlay"></div>
+      <div class="dev-left-content">
+        <div class="dev-avatar-ring"><img src="pp.png" alt="KanaWangyy" onerror="this.style.background='linear-gradient(135deg,#6c63ff,#00e5ff)'"></div>
+        <div class="dev-name">KanaWangyy</div>
+        <div class="dev-handle">@yoikagemodekana</div>
+        <div class="dev-role-badge glass-micro">Official Developer</div>
+      </div>
+    </div>
+    <div class="dev-right">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:0.5rem">
+        <h3 class="dev-title">KanaWangyy <span style="color:var(--accent2)">(YoiKage)</span></h3>
+      </div>
+      <p class="dev-bio">Official Developer dari AniZone 2026. Merancang pengalaman streaming Web App modern yang responsif dan bebas iklan. Bergabunglah dengan komunitas untuk info update source dan bug fixes terbaru.</p>
+      <div class="dev-tech-stack">
+        <span class="tech-chip glass-chip">PWA</span>
+        <span class="tech-chip glass-chip">JavaScript</span>
+        <span class="tech-chip glass-chip">IndexedDB</span>
+        <span class="tech-chip glass-chip">Vercel</span>
+        <span class="tech-chip glass-chip">REST API</span>
+        <span class="tech-chip glass-chip">Responsive UI</span>
+      </div>
+      <a href="https://github.com/kanawangyy-yoikage" target="_blank" class="dev-follow liquid-btn">
+        <span class="btn-liquid"></span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+        Follow di GitHub
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- DIVIDER -->
+<div class="section-divider"></div>
+
+<!-- ═══════════════════════════════════════
+     COMMENTS SECTION
+     ═══════════════════════════════════════ -->
+<section id="comments" class="comments-section">
+  <div class="comments-header">
+    <div>
+      <p class="section-label" style="margin-bottom:0.4rem">Komunitas</p>
+      <h2 class="section-title" style="margin-bottom:0">
+        Komentar <span>Pengguna</span>
+        &nbsp;<span class="comments-count" id="commentsCountBadge">0 komentar</span>
+      </h2>
+    </div>
+    <div id="userPillWrap" style="display:none">
+      <div class="user-pill" id="userPill" onclick="window.__openModal(true)">
+        <div class="user-pill-avatar" id="userPillAvatar">?</div>
+        <span class="user-pill-name" id="userPillName"></span>
+        <span class="user-pill-change">· ganti</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compose -->
+  <div class="compose-box">
+    <div class="compose-top">
+      <div class="compose-avatar" id="composeAvatar">?</div>
+      <div>
+        <div class="compose-username"><span id="composeUsernameName">Belum ada username</span></div>
+        <div style="font-size:0.72rem;color:var(--text2);font-weight:400;margin-top:2px">Komentar kamu akan muncul secara publik</div>
+      </div>
+    </div>
+    <textarea class="compose-textarea" id="commentTextarea" placeholder="Tulis komentarmu tentang AniZone..." maxlength="500" rows="3"></textarea>
+    <div class="compose-bottom">
+      <div class="compose-bottom-left">
+        <span class="compose-char" id="charCounter">0 / 500</span>
+        <span class="draft-indicator" id="draftIndicator" style="display:none">&#128203; Draft tersimpan</span>
+      </div>
+      <button class="btn-submit-comment" id="submitCommentBtn">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22,2 15,22 11,13 2,9"/></svg>
+        Kirim Komentar
+      </button>
+    </div>
+  </div>
+
+  <!-- Sort -->
+  <div class="sort-row">
+    <span class="sort-label">Urutan:</span>
+    <button class="sort-btn active" data-sort="newest">&#128336; Terbaru</button>
+    <button class="sort-btn" data-sort="oldest">&#128197; Terlama</button>
+    <button class="sort-btn" data-sort="popular">&#10084;&#65039; Terpopuler</button>
+  </div>
+
+  <!-- Loading -->
+  <div class="comments-loading" id="commentsLoading" style="display:none">
+    <div class="loading-dot"></div><div class="loading-dot"></div><div class="loading-dot"></div>
+  </div>
+
+  <!-- List -->
+  <div class="comments-list" id="commentsList"></div>
+
+  <!-- Load More -->
+  <button class="btn-load-more" id="loadMoreBtn" style="display:none">Muat lebih banyak komentar &#8595;</button>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-liquid-ring ring1"></div><div class="cta-liquid-ring ring2"></div><div class="cta-liquid-ring ring3"></div>
+  <div class="cta-inner">
+    <p class="section-label reveal">Siap Nonton?</p>
+    <h2 class="cta-title reveal">Mulai streaming sekarang,<br><span class="gradient-text">gratis selamanya</span></h2>
+    <p class="cta-desc reveal">Tidak perlu daftar. Tidak perlu bayar. Tidak ada iklan. Langsung nonton.</p>
+    <div class="reveal" style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="https://anizone-yoikage.vercel.app" target="_blank" class="btn-primary btn-cta liquid-btn">
+        <span class="btn-liquid"></span>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        Buka AniZone
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-glass">
+    <p style="margin-bottom:8px"><strong style="color:var(--text)">AniZone 2026</strong> — dibuat oleh <a href="https://github.com/kanawangyy-yoikage" target="_blank">KanaWangyy (YoiKage)</a></p>
+    <p>Konten di-scrape dari <strong>Samehadaku</strong>. AniZone bukan afiliasi resmi situs tersebut.</p>
+    <p style="margin-top:8px;font-size:0.75rem;opacity:0.5">AniZone · No Ads · PWA · HD Quality</p>
+  </div>
+</footer>
+
+<!-- Delete Confirm Modal -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div style="font-size:2rem;margin-bottom:0.5rem">&#128465;&#65039;</div>
+    <div class="confirm-title">Hapus Komentar?</div>
+    <div class="confirm-sub">Komentar akan dihapus permanen dan tidak bisa dikembalikan.</div>
+    <div class="confirm-btns">
+      <button class="btn-confirm-yes" id="confirmYes">Ya, Hapus</button>
+      <button class="btn-confirm-no" id="confirmNo">Batal</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK (ESM) -->
+<script type="module" src="js/comments.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
