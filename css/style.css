@@ -2432,9 +2432,11 @@ footer a:hover { color: var(--accent3); }
 }
 .screenshots-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 3fr 1.4fr;
+  gap: 1.5rem;
   margin-top: 2.5rem;
+  align-items: stretch;
+  grid-auto-rows: 480px;
 }
 @media (max-width: 640px) {
   .screenshots-grid { grid-template-columns: 1fr; }
@@ -2447,16 +2449,32 @@ footer a:hover { color: var(--accent3); }
   box-shadow: 0 16px 48px rgba(0,0,0,0.5);
   transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 .screenshot-card:hover {
   transform: translateY(-6px) scale(1.01);
   border-color: rgba(108,99,255,0.3);
   box-shadow: 0 24px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(108,99,255,0.12);
 }
+/* Desktop screenshot wrapper fills available height */
+#ssDesktopWrap {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+/* Mobile screenshot wrapper fills available height */
+#ssMobileWrap {
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
 .screenshot-card img {
   width: 100%;
+  height: 100%;
   display: block;
   object-fit: cover;
+  object-position: top;
 }
 .screenshot-label {
   padding: 1rem 1.2rem;
@@ -2473,7 +2491,8 @@ footer a:hover { color: var(--accent3); }
   font-size: 1.1rem;
 }
 .screenshot-placeholder {
-  aspect-ratio: 16/9;
+  flex: 1;
+  min-height: 260px;
   background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(0,229,255,0.05));
   display: flex;
   flex-direction: column;
@@ -2487,8 +2506,7 @@ footer a:hover { color: var(--accent3); }
   padding: 2rem;
 }
 .screenshot-placeholder-mobile {
-  aspect-ratio: 9/16;
-  max-height: 360px;
+  min-height: 260px;
 }
 .screenshot-placeholder .ph-icon {
   font-size: 2.5rem;
